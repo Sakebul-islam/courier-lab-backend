@@ -43,7 +43,7 @@ const refreshAccessToken = catchAsync(async (req: Request, res: Response) => {
     })
 })
 
-
+//logout
 const accessTokenLogout = catchAsync(async (req: Request, res: Response) => {
 
     res.clearCookie("accessToken");

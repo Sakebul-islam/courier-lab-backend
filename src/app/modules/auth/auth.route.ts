@@ -12,4 +12,6 @@ route.post('/logout', AuthController.accessTokenLogout)
 
 
 
+
+
 export const authRoutes = route
