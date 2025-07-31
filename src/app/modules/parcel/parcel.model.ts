@@ -45,6 +45,10 @@ export const parcelSchema = new Schema<IParcel>(
             type: Number,
             required: true
         },
+        phoneNumber: {
+            type: Number,
+            required: true
+        },
         pickupAddress: {
             type: String,
             required: true
@@ -64,10 +68,6 @@ export const parcelSchema = new Schema<IParcel>(
         trackingEvents: {
             type: [trackingEventSchema],
             default: []
-        },
-        isCancelled: {
-            type: Boolean,
-            default: false
         },
         isBlocked: {
             type: Boolean,

@@ -20,14 +20,16 @@ export const checkAuth = (...authRoles: string[]) =>
 
             const isUserExits = await User.findOne({ email: verifiedToken.email })
             if (!isUserExits) {
-                throw new AppError(400, "user does not exist")
+                throw new AppError(400, "user does not found")
             }
 
-            /*   if (isUserExits.isActive === IsActive.BLOCKED || isUserExits.isActive === IsActive.INACTIVE) {
-                  throw new AppError(httpStatus.BAD_REQUEST,
-                      `user is ${isUserExits.isActive}`)
-              } */
+            if (isUserExits.isBlock === true) {
+                throw new AppError(403, "Your account is blocked");
+            }
 
+            if (isUserExits.isActive === false) {
+                throw new AppError(403, "Your account is deactivate");
+            }
 
             if (!authRoles.includes(verifiedToken.role)) {
                 throw new AppError(403, "You are not permitted to view this route!!!")

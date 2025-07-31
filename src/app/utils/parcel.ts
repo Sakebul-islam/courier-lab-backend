@@ -1,3 +1,4 @@
+import { ParcelStatus } from "../modules/parcel/parcel.interface";
 
 
 export const generateTrackingId = () => {
@@ -7,3 +8,9 @@ export const generateTrackingId = () => {
     return `TRK-${date}-${random}`;
 }
 
+
+export const cancelParcelBeforeDispatch = [
+    ParcelStatus.DISPATCHED,
+    ParcelStatus.IN_TRANSIT,
+    ParcelStatus.DELIVERED,
+];

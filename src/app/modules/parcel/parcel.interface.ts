@@ -1,14 +1,12 @@
 import { Types } from "mongoose";
 
 export enum ParcelStatus {
-    REQUESTED = "Requested",
-    APPROVED = "Approved",
-    DISPATCHED = "Dispatched",
-    IN_TRANSIT = "InTransit",
-    DELIVERED = "Delivered",
-    CANCELLED = "Cancelled",
-    RETURNED = "Returned",
-    FAILED = "Failed"
+    REQUESTED = "requested",
+    APPROVED = "approved",
+    DISPATCHED = "dispatched",
+    IN_TRANSIT = "inTransit",
+    DELIVERED = "delivered",
+    CANCELLED = "cancelled",
 }
 
 // Tracking 
@@ -25,13 +23,13 @@ export interface IParcel {
     type: string;
     weight: number;
     fee: number;
+    phoneNumber: number;
     pickupAddress?: string;
     deliveryAddress: string;
     deliveryDate?: Date;
+    isBlocked?: boolean;
     status: ParcelStatus;
     trackingEvents: ITrackingEvent[];
-    isBlocked?: boolean;
-    isCancelled?: boolean;
     sender?: Types.ObjectId;
     receiver: Types.ObjectId;
     createdAt?: Date;
