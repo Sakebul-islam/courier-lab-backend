@@ -30,10 +30,9 @@ route.patch('/unblock/:id',
     checkAuth(Role.ADMIN),
     userController.unblockUser);
 
-route.patch('/updateStatus/:id',
+route.patch('/update-parcel-status/:id',
     checkAuth(Role.ADMIN),
-    userController.unblockUser);
-
+    userController.updateParcelStatus);
 
 
 

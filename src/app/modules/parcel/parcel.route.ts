@@ -6,7 +6,7 @@ import { ParcelController } from "./parcel.controller";
 
 const router = Router()
 
-
+// Sender Route
 router.post('/create',
     checkAuth(Role.SENDER),
     ParcelController.createParcel)
@@ -20,6 +20,7 @@ router.get('/me',
     ParcelController.getMyParcels);
 
 
+// Receiver Route
 router.get(
     "/incoming-parcels",
     checkAuth(Role.RECEIVER),

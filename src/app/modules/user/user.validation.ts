@@ -11,3 +11,4 @@ export const createUserZodSchema = z.object({
     role: z.enum(Object.values(Role)),
     isActive: z.boolean().optional(),
 });
+

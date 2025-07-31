@@ -14,7 +14,7 @@ export interface ITrackingEvent {
     status: ParcelStatus;
     location: string;
     timestamp: Date;
-    updatedBy?: Types.ObjectId; // admin or system user
+    updatedBy?: Types.ObjectId; 
     note?: string;
 }
 

@@ -26,7 +26,7 @@ export const checkAuth = (...authRoles: string[]) =>
             if (isUserExits.isBlock === true) {
                 throw new AppError(403, "Your account is blocked");
             }
-
+            
             if (isUserExits.isActive === false) {
                 throw new AppError(403, "Your account is deactivate");
             }

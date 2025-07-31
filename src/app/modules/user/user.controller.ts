@@ -4,6 +4,7 @@ import { sendResponse } from "../../utils/sendResponse";
 import { userServices } from "./user.service";
 
 
+
 const createUser = catchAsync(async (req: Request, res: Response) => {
 
     const user = await userServices.createUser(req.body)
@@ -60,6 +61,21 @@ const unblockUser = catchAsync(async (req: Request, res: Response) => {
     });
 })
 
+const updateParcelStatus = catchAsync(async (req: Request, res: Response) => {
+    const id = req.params.id
+    const decodedToken = req.user?.userId
+    const { status, location, note } = req.body
+
+    const users = await userServices.updateParcelStatus(id, status, location, note, decodedToken);
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: 'parcel update Status Successfully',
+        data: users,
+    });
+})
+
+
 
 
 export const userController = {
@@ -67,5 +83,6 @@ export const userController = {
     getAllParcels,
     getAllUsers,
     blockUser,
-    unblockUser
+    unblockUser,
+    updateParcelStatus
 }

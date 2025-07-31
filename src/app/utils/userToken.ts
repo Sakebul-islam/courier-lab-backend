@@ -33,10 +33,12 @@ export const createAccessTokenWithRefreshToken = async (refreshToken: string) =>
     if (!isUserExits) {
         throw new AppError(400, "user does not found")
     }
-
-    /* if (isUserExits.isActive === false || isUserExits.isBlock === true) {
-        throw new AppError(400, 'user or parcels does not access')
-    } */
+    if (isUserExits.isBlock === true) {
+        throw new AppError(403, "Your account is blocked");
+    }
+    if (isUserExits.isActive === false) {
+        throw new AppError(403, "Your account is deactivate");
+    }
 
     const JwtPayload = {
         userId: isUserExits._id,

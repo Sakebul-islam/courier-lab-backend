@@ -4,13 +4,12 @@ import { sendResponse } from "../../utils/sendResponse"
 import { ParcelService } from "./parcel.service";
 
 
-
 // Sender Controller
 const createParcel = catchAsync(async (req: Request, res: Response) => {
     const parcel = req.body;
-    const senderId = req.user.userId
+    const decodedToken = req.user.userId
 
-    const result = await ParcelService.createParcel(parcel, senderId)
+    const result = await ParcelService.createParcel(parcel, decodedToken)
 
     sendResponse(res, {
         success: true,
@@ -22,24 +21,24 @@ const createParcel = catchAsync(async (req: Request, res: Response) => {
 
 const cancelParcel = catchAsync(async (req: Request, res: Response) => {
     const id = req.params.id
-    const senderId = req.user?.userId
-    const result = await ParcelService.cancelParcel(id, senderId)
+    const decodedToken = req.user?.userId
+    const result = await ParcelService.cancelParcel(id, decodedToken)
 
     sendResponse(res, {
         success: true,
-        statusCode: 201,
+        statusCode: 200,
         message: "Parcel cancelled successfully",
         data: result
     })
 })
 
 const getMyParcels = catchAsync(async (req: Request, res: Response) => {
-    const senderId = req.user?.userId
-    const result = await ParcelService.getMyParcels(senderId)
+    const decodedToken = req.user?.userId
+    const result = await ParcelService.getMyParcels(decodedToken)
 
     sendResponse(res, {
         success: true,
-        statusCode: 201,
+        statusCode: 200,
         message: "Parcels retrieved successfully",
         data: result
     })

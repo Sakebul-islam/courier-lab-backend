@@ -19,7 +19,7 @@ const trackingEventSchema = new Schema(
         },
         updatedBy: {
             type: Types.ObjectId,
-            ref: "User", // or Admin/DeliveryAgent based on your system
+            ref: "User", 
         },
         note: String
     },

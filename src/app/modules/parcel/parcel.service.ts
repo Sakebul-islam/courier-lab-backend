@@ -1,5 +1,5 @@
 import { Types } from "mongoose"
-import { cancelParcelBeforeDispatch, generateTrackingId } from "../../utils/parcel"
+import { nonCancellableStatuses, generateTrackingId } from "../../utils/parcel"
 import { IParcel, ParcelStatus } from "./parcel.interface"
 import { Parcel } from "./parcel.model"
 import AppError from "../../errorHelpers/AppError"
@@ -36,8 +36,8 @@ const cancelParcel = async (id: string, senderId: Types.ObjectId) => {
         throw new AppError(404, "Parcel not found");
     }
 
-    if (cancelParcelBeforeDispatch.includes(parcel.status)) {
-        throw new AppError(400, 'Parcel already dispatched! cannot cancel');
+    if (nonCancellableStatuses.includes(parcel.status)) {
+        throw new AppError(400, "Parcel already dispatched! cannot cancel");
     }
 
     parcel.status = ParcelStatus.CANCELLED
@@ -88,7 +88,7 @@ const confirmParcelDelivery = async (receiverId: Types.ObjectId, parcelId: strin
         timestamp: new Date(),
     });
 
-
+    await parcel.save();
     return parcel
 }
 

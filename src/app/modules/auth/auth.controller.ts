@@ -46,8 +46,20 @@ const refreshAccessToken = catchAsync(async (req: Request, res: Response) => {
 //logout
 const accessTokenLogout = catchAsync(async (req: Request, res: Response) => {
 
-    res.clearCookie("accessToken");
-    res.clearCookie("refreshToken");
+    //res.clearCookie("accessToken");
+    //res.clearCookie("refreshToken"); 
+
+    res.clearCookie("accessToken", {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax"
+    })
+
+    res.clearCookie("refreshToken", {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax"
+    })
 
     sendResponse(res, {
         success: true,

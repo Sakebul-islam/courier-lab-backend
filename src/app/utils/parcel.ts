@@ -9,8 +9,9 @@ export const generateTrackingId = () => {
 }
 
 
-export const cancelParcelBeforeDispatch = [
+export const nonCancellableStatuses = [
     ParcelStatus.DISPATCHED,
     ParcelStatus.IN_TRANSIT,
     ParcelStatus.DELIVERED,
 ];
+
