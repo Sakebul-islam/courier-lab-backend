@@ -1,0 +1,20 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.usersRoutes = void 0;
+const express_1 = require("express");
+const user_controller_1 = require("./user.controller");
+const user_validation_1 = require("./user.validation");
+const validateRequest_1 = require("../../middlewares/validateRequest");
+const autoRefreshToken_1 = require("../../middlewares/autoRefreshToken");
+const user_interface_1 = require("./user.interface");
+const route = (0, express_1.Router)();
+route.post("/register", (0, validateRequest_1.validateRequest)(user_validation_1.createUserZodSchema), user_controller_1.userController.createUser);
+route.get("/tracking/:id", user_controller_1.userController.trackingById);
+// Admin routes with auto-refresh capability
+route.get("/all-parcels", (0, autoRefreshToken_1.autoRefreshToken)(user_interface_1.Role.ADMIN), user_controller_1.userController.getAllParcels);
+route.get("/all-users", (0, autoRefreshToken_1.autoRefreshToken)(user_interface_1.Role.ADMIN), user_controller_1.userController.getAllUsers);
+route.patch("/block/:id", (0, autoRefreshToken_1.autoRefreshToken)(user_interface_1.Role.ADMIN), user_controller_1.userController.blockUser);
+route.patch("/unblock/:id", (0, autoRefreshToken_1.autoRefreshToken)(user_interface_1.Role.ADMIN), user_controller_1.userController.unblockUser);
+route.patch("/parcel/block-toggle/:id", (0, autoRefreshToken_1.autoRefreshToken)(user_interface_1.Role.ADMIN), user_controller_1.userController.toggleParcelBlock);
+route.patch("/update-parcel-status/:id", (0, autoRefreshToken_1.autoRefreshToken)(user_interface_1.Role.ADMIN), user_controller_1.userController.updateParcelStatus);
+exports.usersRoutes = route;
