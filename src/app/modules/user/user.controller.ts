@@ -18,8 +18,7 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
 })
 
 const trackingById = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params
-
+    const { id } = req.params;
     const user = await userServices.trackingById(id)
 
     sendResponse(res, {

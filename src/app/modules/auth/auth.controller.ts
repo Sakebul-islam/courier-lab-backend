@@ -1,78 +1,69 @@
-import { Request, Response } from "express"
-import { catchAsync } from "../../utils/catchAsync"
-import { sendResponse } from "../../utils/sendResponse"
-import { AuthService } from "./auth.service"
-import { setAuthCookie } from "../../utils/setCookie"
-import AppError from "../../errorHelpers/AppError"
+import { Request, Response } from "express";
+import { catchAsync } from "../../utils/catchAsync";
+import { sendResponse } from "../../utils/sendResponse";
+import { AuthService } from "./auth.service";
+import { setAuthCookie } from "../../utils/setCookie";
+import AppError from "../../errorHelpers/AppError";
 
-// custom Login 
+// custom Login
 const login = catchAsync(async (req: Request, res: Response) => {
+  const logInfo = await AuthService.login(req.body);
 
-    const logInfo = await AuthService.login(req.body)
+  setAuthCookie(res, logInfo);
 
-    setAuthCookie(res, logInfo)
-
-    sendResponse(res, {
-        success: true,
-        statusCode: 200,
-        message: "Login SuccessFully",
-        data: logInfo
-    })
-
-})
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Login SuccessFully",
+    data: logInfo,
+  });
+});
 
 // Refresh Token create
 const refreshAccessToken = catchAsync(async (req: Request, res: Response) => {
+  const refreshToken = req.cookies.refreshToken;
 
-    const refreshToken = req.cookies.refreshToken
+  if (!refreshToken) {
+    throw new AppError(400, "No refresh token received from cookies");
+  }
 
-    if (!refreshToken) {
-        throw new AppError(400, "No refresh token received from cookies")
-    }
+  const tokenInfo = await AuthService.refreshAccessToken(refreshToken);
 
-    const tokenInfo = await AuthService.refreshAccessToken(refreshToken)
+  // cookie set
+  setAuthCookie(res, tokenInfo);
 
-    // cookie set 
-    setAuthCookie(res, tokenInfo)
-
-    sendResponse(res, {
-        success: true,
-        statusCode: 201,
-        message: "New Access Token Retrieved Successfully",
-        data: tokenInfo
-    })
-})
+  sendResponse(res, {
+    success: true,
+    statusCode: 201,
+    message: "New Access Token Retrieved Successfully",
+    data: tokenInfo,
+  });
+});
 
 //logout
 const accessTokenLogout = catchAsync(async (req: Request, res: Response) => {
+  res.clearCookie("accessToken", {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax",
+  });
 
-    //res.clearCookie("accessToken");
-    //res.clearCookie("refreshToken"); 
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax",
+  });
 
-    res.clearCookie("accessToken", {
-        httpOnly: true,
-        secure: false,
-        sameSite: "lax"
-    })
-
-    res.clearCookie("refreshToken", {
-        httpOnly: true,
-        secure: false,
-        sameSite: "lax"
-    })
-
-    sendResponse(res, {
-        success: true,
-        statusCode: 200,
-        message: "User Log out Successfully",
-        data: null
-    })
-})
-
-
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "User Log out Successfully",
+    data: null,
+  });
+});
 
 export const AuthController = {
-    login,
-    refreshAccessToken,
-    accessTokenLogout
-}
+  login,
+  refreshAccessToken,
+  accessTokenLogout,
+};

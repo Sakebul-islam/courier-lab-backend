@@ -14,7 +14,7 @@ const login = async (payload: Partial<IUser>) => {
         throw new AppError(401, "Email does not found")
     }
 
-    const isPasswordMatch = bcrypt.compare(password as string, user.password)
+    const isPasswordMatch = await bcrypt.compare(password as string, user.password)
     if (!isPasswordMatch) {
         throw new AppError(400, "Incorrect Password")
     }

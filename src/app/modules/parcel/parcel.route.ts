@@ -1,42 +1,42 @@
 import { Router } from "express";
-import { checkAuth } from "../../middlewares/checkAuth";
+import { autoRefreshToken } from "../../middlewares/autoRefreshToken";
 import { Role } from "../user/user.interface";
 import { ParcelController } from "./parcel.controller";
 
-
-const router = Router()
+const router = Router();
 
 // Sender Route
-router.post('/create',
-    checkAuth(Role.SENDER),
-    ParcelController.createParcel)
-
-router.patch('/cancel/:id',
-    checkAuth(Role.SENDER),
-    ParcelController.cancelParcel);
-
-router.get('/me',
-    checkAuth(Role.SENDER),
-    ParcelController.getMyParcels);
-
-
-// Receiver Route
-router.get(
-    "/incoming-parcels",
-    checkAuth(Role.RECEIVER),
-    ParcelController.incomingParcels
+router.post(
+  "/create",
+  autoRefreshToken(Role.SENDER),
+  ParcelController.createParcel
 );
 
 router.patch(
-    "/confirm-delivery/:id",
-    checkAuth(Role.RECEIVER),
-    ParcelController.confirmParcelDelivery
-)
-
-router.get(
-    "/delivery-history",
-    checkAuth(Role.RECEIVER),
-    ParcelController.getDeliveryHistory
+  "/cancel/:id",
+  autoRefreshToken(Role.SENDER),
+  ParcelController.cancelParcel
 );
 
-export const parcelRoutes = router
+router.get("/me", autoRefreshToken(Role.SENDER), ParcelController.getMyParcels);
+
+// Receiver Route
+router.get(
+  "/incoming-parcels",
+  autoRefreshToken(Role.RECEIVER),
+  ParcelController.incomingParcels
+);
+
+router.patch(
+  "/confirm-delivery/:id",
+  autoRefreshToken(Role.RECEIVER),
+  ParcelController.confirmParcelDelivery
+);
+
+router.get(
+  "/delivery-history",
+  autoRefreshToken(Role.RECEIVER),
+  ParcelController.getDeliveryHistory
+);
+
+export const parcelRoutes = router;
