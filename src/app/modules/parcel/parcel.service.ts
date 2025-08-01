@@ -75,9 +75,14 @@ const confirmParcelDelivery = async (receiverId: Types.ObjectId, parcelId: strin
         throw new AppError(404, "Parcel not found");
     }
 
+    if (parcel.status === ParcelStatus.DELIVERED as ParcelStatus) {
+        throw new AppError(400, 'Parcel already delivered ');
+    }
+
     if (parcel.status !== ParcelStatus.IN_TRANSIT) {
         throw new Error("Not ready for delivery");
     }
+
 
     parcel.status = ParcelStatus.DELIVERED
     parcel.trackingEvents.push({

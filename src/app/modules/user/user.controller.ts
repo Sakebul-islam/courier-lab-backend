@@ -33,9 +33,9 @@ const trackingById = catchAsync(async (req: Request, res: Response) => {
 
 // Admin Controller
 const getAllParcels = catchAsync(async (req: Request, res: Response) => {
-    const status = req.query.status
-    const senderId = req.query.senderId;
-    const receiverId = req.query.receiverId;
+    const status = req.query.status as string;
+    const senderId = req.query.senderId as string;
+    const receiverId = req.query.receiverId as string;
     const user = await userServices.getAllParcels(status, senderId, receiverId)
 
     sendResponse(res, {
