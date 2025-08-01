@@ -46,6 +46,7 @@ export const autoRefreshToken =
 
       // Development logging
       if (envVars.NODE_ENV === "development") {
+        // eslint-disable-next-line no-console
         console.log("🔍 Auth Debug:", {
           hasHeaderToken: !!req.headers.authorization,
           hasCookieToken: !!req.cookies.accessToken,
@@ -94,6 +95,7 @@ export const autoRefreshToken =
 
           // Development logging for token refresh
           if (envVars.NODE_ENV === "development") {
+            // eslint-disable-next-line no-console
             console.log("🔄 Token Refresh Attempt:", {
               hasRefreshToken: !!refreshToken,
               isHeaderAuth,

@@ -96,8 +96,6 @@ const updateParcelStatus = async (parcelId: string, newStatus: ParcelStatus, loc
     }
 
     const currentStatus = parcel.status;
-    console.log("currentStatus",parcel.status) // should show "inTransit"
-
     const nextStatuses = allowedNextStatus[currentStatus];
 
     if (!nextStatuses.includes(newStatus)) {
