@@ -21,7 +21,7 @@ app.use(routes)
 
 app.get("/", (req: Request, res: Response) => {
     res.status(200).json({
-        message: "Welcome to delivery Backend"
+        message: "Welcome to CourierLab Backend"
     })
 })
 
