@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Types } from "mongoose"
 import { envVars } from "../../config/env"
 import AppError from "../../errorHelpers/AppError"
+import { allowedNextStatus } from "../../utils/parcel"
 import { ParcelStatus } from "../parcel/parcel.interface"
 import { Parcel } from "../parcel/parcel.model"
 import { IUser } from "./user.interface"
@@ -26,9 +29,35 @@ const createUser = async (payload: Partial<IUser>) => {
     return user
 }
 
+// trackingById 
+const trackingById = async (trackingId: string) => {
+
+    const parcel = await Parcel.findOne({ trackingId })
+    if (!parcel) throw new AppError(404, "Parcel not found with this tracking ID");
+
+
+    return {
+        status: parcel.status,
+        trackingEvents: parcel.trackingEvents,
+    }
+}
+
 // Admin services
-const getAllParcels = async () => {
-    const allParcels = await Parcel.find()
+const getAllParcels = async (status: string, senderId: string, receiverId: string) => {
+
+    const query: any = {};
+    
+    if (status) {
+        query.status = status;
+    }
+    if (senderId) {
+        query.sender = senderId
+    }
+    if (receiverId) {
+        query.receiver = receiverId;
+    }
+
+    const allParcels = await Parcel.find(query)
 
     return allParcels
 }
@@ -59,39 +88,56 @@ const unblockUser = async (id: string, block: boolean) => {
     return user
 }
 
-const updateParcelStatus = async (parcelId: string, newStatus: ParcelStatus, location: string, note: string, adminId: string) => {
+const updateParcelStatus = async (parcelId: string, newStatus: ParcelStatus, location: string, note: string, adminId: Types.ObjectId) => {
 
-    const parcel = Parcel.findById(parcelId)
+    const parcel = await Parcel.findById(parcelId)
     if (!parcel) {
         throw new AppError(401, "parcel does not exits")
     }
 
+    const currentStatus = parcel.status;
+    const nextStatuses = allowedNextStatus[currentStatus];
 
-   /*  const expectedNext = allowedNextStatus[parcel.status];
-    if (newStatus !== expectedNext) {
-        throw new AppError(400, `You can only change status from ${parcel.status} to ${expectedNext}`);
+    if (!nextStatuses.includes(newStatus)) {
+        throw new AppError(400, `Invalid status transition from ${currentStatus} to ${newStatus}`);
     }
-
     parcel.status = newStatus;
+
     parcel.trackingEvents.push({
         status: newStatus,
         location,
-        timestamp,
+        timestamp: new Date(),
         note,
         updatedBy: adminId,
     });
 
-    return await parcel.save()
- */
+    await parcel.save();
+    return parcel;
 }
 
+const toggleParcelBlock = async (id: string) => {
+    const parcel = await Parcel.findById(id);
+    if (!parcel) {
+        throw new AppError(404, "Parcel not found");
+    }
+
+    parcel.isBlocked = !parcel.isBlocked;
+    await parcel.save();
+
+    return {
+        message: `Parcel has been ${parcel.isBlocked ? "blocked" : "unblocked"} successfully.`,
+        isBlocked: parcel.isBlocked,
+    };
+}
 
 
 export const userServices = {
     createUser,
+    trackingById,
     getAllParcels,
     getAllUsers,
     blockUser,
     unblockUser,
-    updateParcelStatus
+    updateParcelStatus,
+    toggleParcelBlock
 }

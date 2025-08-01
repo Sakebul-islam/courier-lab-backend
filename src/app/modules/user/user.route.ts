@@ -13,6 +13,8 @@ route.post('/register',
     validateRequest(createUserZodSchema),
     userController.createUser)
 
+route.get('/tracking/:id', userController.trackingById)
+
 // Admin route 
 route.get('/all-parcels',
     checkAuth(Role.ADMIN),
@@ -30,9 +32,15 @@ route.patch('/unblock/:id',
     checkAuth(Role.ADMIN),
     userController.unblockUser);
 
+route.patch("/parcel/block-toggle/:id",
+    checkAuth(Role.ADMIN),
+    userController.toggleParcelBlock);
+
 route.patch('/update-parcel-status/:id',
     checkAuth(Role.ADMIN),
     userController.updateParcelStatus);
+
+
 
 
 

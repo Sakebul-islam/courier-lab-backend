@@ -17,13 +17,30 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
     })
 })
 
-// Admin Controller
-const getAllParcels = catchAsync(async (req: Request, res: Response) => {
-    const user = await userServices.getAllParcels()
+const trackingById = catchAsync(async (req: Request, res: Response) => {
+    const { id } = req.params
+
+    const user = await userServices.trackingById(id)
 
     sendResponse(res, {
         success: true,
-        statusCode: 201,
+        statusCode: 200,
+        message: "Tracking parcel successfully",
+        data: user
+    })
+})
+
+
+// Admin Controller
+const getAllParcels = catchAsync(async (req: Request, res: Response) => {
+    const status = req.query.status
+    const senderId = req.query.senderId;
+    const receiverId = req.query.receiverId;
+    const user = await userServices.getAllParcels(status, senderId, receiverId)
+
+    sendResponse(res, {
+        success: true,
+        statusCode: 200,
         message: "All parcels retrieved Successfully",
         data: user
     })
@@ -75,14 +92,28 @@ const updateParcelStatus = catchAsync(async (req: Request, res: Response) => {
     });
 })
 
+const toggleParcelBlock = catchAsync(async (req: Request, res: Response) => {
+    const id = req.params.id
+    const users = await userServices.toggleParcelBlock(id);
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Parcel block or unblock",
+        data: users,
+    });
+})
+
+
 
 
 
 export const userController = {
     createUser,
+    trackingById,
     getAllParcels,
     getAllUsers,
     blockUser,
     unblockUser,
-    updateParcelStatus
+    updateParcelStatus,
+    toggleParcelBlock
 }
